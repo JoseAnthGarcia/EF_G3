@@ -1,5 +1,7 @@
 package Servlets;
 
+import Beans.Empleado;
+import Beans.Rol;
 import Daos.EmpleadoDao;
 
 import javax.servlet.RequestDispatcher;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 
 @WebServlet(name = "LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -19,49 +22,23 @@ public class LoginServlet extends HttpServlet {
 
         switch (action) {
             case "login":
-                String inputEmail = request.getParameter("inputEmail");
+                String inputUsuario = request.getParameter("inputEmail");
                 String inputPassword = request.getParameter("inputPassword");
-                EmpleadoDao employeeDao= new EmpleadoDao();
-                EmpleadoDao employee = employeeDao.validarEmpleado(inputEmail, inputPassword);
-                if(employee!=null){
+                EmpleadoDao empleadoDao= new EmpleadoDao();
+                Empleado empleado = empleadoDao.validarEmpleado(inputUsuario, inputPassword);
+                if(empleado!=null){
                     HttpSession session =request.getSession();
-                    session.setAttribute("employeeSession", employee);
+                    session.setAttribute("empleadoSession", empleado);
 
-                    String rol = "";
-                    int maxSal = employee.getJob().getMaxSalary();
-                    int minSal = employee.getJob().getMinSalary();
+                    Rol rol = empleado.getRoles().get(1);
 
-                    if(maxSal>15000 || employeeDao.validarJefeDepart(employee.getEmployeeId())){
-                        rol = "Top 1";
-                    }
 
-                    if(maxSal<=15000 && maxSal>8500 && !employeeDao.validarJefeDepart(employee.getEmployeeId())){
-                        rol = "Top 2";
-                    }
-
-                    if(maxSal<=8500 && maxSal>5000 && !employeeDao.validarJefeDepart(employee.getEmployeeId())){
-                        rol = "Top 3";
-                    }
-
-                    if(maxSal<=5000 && !employeeDao.validarJefeDepart(employee.getEmployeeId())){
-                        rol = "Top 4";
-                    }
-                    System.out.println("El rol es "+rol);
-                    session.setAttribute("rol", rol);
-
-                    switch (rol){
-                        case "Top 1":
-                            response.sendRedirect(request.getContextPath() + "/EmployeeServlet");
-                            break;
-                        case "Top 2":
-                            response.sendRedirect(request.getContextPath() + "/JobServlet");
-                            break;
-                        case "Top 3":
-                            response.sendRedirect(request.getContextPath() + "/DepartmentServlet");
-                            break;
-                        case "Top 4":
-                            response.sendRedirect(request.getContextPath() + "/CountryServlet");
-                            break;
+                    if ("vendedor".equals(rol)) {
+                        response.sendRedirect(request.getContextPath() + "/");
+                    } else if ("gestor".equals(rol)) {
+                        response.sendRedirect(request.getContextPath() + "/");
+                    } else if ("admin".equals(rol)) {
+                        response.sendRedirect(request.getContextPath() + "/");
                     }
                 }else{
                     response.sendRedirect(request.getContextPath()+"/LoginServlet?error");
@@ -76,11 +53,11 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
         switch (accion){
             case "login":
-                Employee employee = (Employee) session.getAttribute("employee");
-                if(employee!= null && employee.getEmployeeId()>0){
-                    response.sendRedirect(request.getContextPath()+"/EmployeeServlet");
+                Empleado empleado = (Empleado) session.getAttribute("empleado");
+                if(empleado!= null && empleado.getIdEmpleado()>0){
+                    response.sendRedirect(request.getContextPath()+"/EmpleadoServlet");
                 }
-                request.setAttribute("employeeSession", employee);
+                request.setAttribute("employeeSession", empleado);
                 request.setAttribute("rol", session.getAttribute("rol"));
                 RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
                 requestDispatcher.forward(request,response);
