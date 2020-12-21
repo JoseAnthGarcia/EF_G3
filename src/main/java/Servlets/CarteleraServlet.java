@@ -94,14 +94,13 @@ public class CarteleraServlet extends HttpServlet {
         String action = request.getParameter("action") == null ? "lista" : request.getParameter("action");
 
         RequestDispatcher view;
-        String rol = (String) request.getSession().getAttribute("rol");
 
         CarteleraDao carteleraDao = new CarteleraDao();
 
         switch (action) {
             case "lista":
                 request.setAttribute("listaCartelera", carteleraDao.listaCarteleras());
-                view = request.getRequestDispatcher("employees/lista.jsp");
+                view = request.getRequestDispatcher("listaCartelera.jsp");
                 view.forward(request, response);
                 break;
             case "agregar":
