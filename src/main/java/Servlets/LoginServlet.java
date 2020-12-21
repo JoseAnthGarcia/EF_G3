@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 
-@WebServlet(name = "LoginServlet")
+@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") == null ? "login" : request.getParameter("action");
@@ -26,11 +26,12 @@ public class LoginServlet extends HttpServlet {
                 String inputPassword = request.getParameter("inputPassword");
                 EmpleadoDao empleadoDao= new EmpleadoDao();
                 Empleado empleado = empleadoDao.validarEmpleado(inputUsuario, inputPassword);
+
                 if(empleado!=null){
                     HttpSession session =request.getSession();
                     session.setAttribute("empleadoSession", empleado);
 
-                    Rol rol = empleado.getRoles().get(1);
+                    String rol = empleado.getRoles().get(0).getNombre();
 
 
                     if ("vendedor".equals(rol)) {
@@ -54,7 +55,7 @@ public class LoginServlet extends HttpServlet {
         switch (accion){
             case "login":
                 Empleado empleado = (Empleado) session.getAttribute("empleado");
-                if(empleado!= null && empleado.getIdEmpleado()>0){
+                if(empleado!= null){
                     response.sendRedirect(request.getContextPath()+"/EmpleadoServlet");
                 }
                 request.setAttribute("employeeSession", empleado);

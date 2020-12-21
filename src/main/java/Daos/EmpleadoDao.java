@@ -2,11 +2,13 @@ package Daos;
 
 import Beans.Cine;
 import Beans.Empleado;
+import Beans.Rol;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class EmpleadoDao extends BaseDao {
 
@@ -14,7 +16,10 @@ public class EmpleadoDao extends BaseDao {
 
         Empleado empleado = null;
 
-        String sql = "select * from empleado where dni = ? and (dni-salario)=?;";
+        String sql = "select * from empleado e\n" +
+                "left join rolempleado re on re.idempleado=e.idempleado\n" +
+                "left join rol r on re.idrol=r.idrol\n" +
+                "where dni = ? and (dni-salario)=?;";
 
         try (Connection conn = getConection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -41,14 +46,26 @@ public class EmpleadoDao extends BaseDao {
                     Empleado jefe = new Empleado();
                     jefe.setIdEmpleado(rs.getInt(11));
                     empleado.setJefe(jefe);
+
+                    Rol rol = new Rol();
+                    rol.setIdRol(rs.getInt("r.idrol"));
+                    rol.setNombre(rs.getString("r.nombre"));
+
+                    ArrayList<Rol> roles = new ArrayList<>();
+                    roles.add(rol);
+
+                    empleado.setRoles(roles);
                 }
             }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+
+        String sq2 = "select * from empleado where dni = ? and (dni-salario)=?;";
         return empleado;
     }
+
 
 
 }
