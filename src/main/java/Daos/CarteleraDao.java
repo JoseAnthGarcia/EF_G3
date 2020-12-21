@@ -16,7 +16,7 @@ public class CarteleraDao extends BaseDao{
                 "where ci.idcine=?;";
         try (Connection conn = getConection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
-            pstmt.setString(1, idCine);
+            pstmt.setInt(1, idCine);
 
 
             try (ResultSet rs = pstmt.executeQuery();) {
@@ -37,7 +37,7 @@ public class CarteleraDao extends BaseDao{
                     cartelera.setDoblada(rs.getInt(8));
                     cartelera.setSubtitulada(rs.getInt(9));
                     cartelera.setHorario(rs.getString(10));
-                    lista.add(cartelera)
+                    lista.add(cartelera);
                 }
             }
 
@@ -74,7 +74,7 @@ public class CarteleraDao extends BaseDao{
                 Pelicula pelicula = new Pelicula();
                 pelicula.setIdPelicula(rs.getInt(1));
                 pelicula.setNombre(rs.getString(2));
-                listaPeliculas.add(pelicula)
+                listaPeliculas.add(pelicula);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

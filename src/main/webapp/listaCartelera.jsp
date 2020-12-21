@@ -3,7 +3,6 @@
 <%@ page import="Beans.Cartelera" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="listaCartelera" type="java.util.ArrayList<Beans.Cartelera>" scope="request" />
-<jsp:useBean id="rol" type="java.lang.String" scope="session" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,18 +13,16 @@
 </head>
 <body>
 <div class='container'>
-    <jsp:include page="../includes/navbar.jsp">
+    <jsp:include page="includes/navbar.jsp">
         <jsp:param name="currentPage" value="emp" />
     </jsp:include>
     <div class="row mb-5 mt-4">
         <div class="col-lg-6">
             <h1 class=''>Cartelera</h1>
         </div>
-        <% if (rol.equals("Top 1") || rol.equals("Top 2")) {%>
         <div class="col-lg-6 my-auto text-lg-right">
             <a href="<%= request.getContextPath()%>/CarteleraServlet?action=agregar" class="btn btn-primary">Agregar nueva funcion</a>
         </div>
-        <% } %>
     </div>
     <table class="table">
         <thead>
@@ -33,14 +30,8 @@
             <th>Cadena</th>
             <th>Cine</th>
             <th>Pelicula</th>
-
-
-            <% if (rol.equals("Top 1") || rol.equals("Top 3")) { %>
             <th></th>
-            <% } %>
-            <% if (rol.equals("Top 1") || rol.equals("Top 2")) { %>
             <th></th>
-            <% } %>
         </tr>
         </thead>
         <tbody>
@@ -58,7 +49,7 @@
                 <%if(c.getSubtitulada()==1){%>
                 Subtitulada
                 <%}%>
-                <%if(c.getSubtitulada()==1){%>
+                <%if(c.getDoblada()==1){%>
                 Doblada
                 <%}%>
 

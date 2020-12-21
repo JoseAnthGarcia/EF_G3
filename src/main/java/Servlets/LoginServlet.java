@@ -35,9 +35,9 @@ public class LoginServlet extends HttpServlet {
 
 
                     if ("vendedor".equals(rol)) {
-                        response.sendRedirect(request.getContextPath() + "/");
+                        response.sendRedirect(request.getContextPath() + "/CarteleraServlet?action=lista");
                     } else if ("gestor".equals(rol)) {
-                        response.sendRedirect(request.getContextPath() + "/");
+                        response.sendRedirect(request.getContextPath() + "/CarteleraServlet?action=lista");
                     } else if ("admin".equals(rol)) {
                         response.sendRedirect(request.getContextPath() + "/");
                     }

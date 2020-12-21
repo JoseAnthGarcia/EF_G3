@@ -42,8 +42,6 @@ public class CarteleraServlet extends HttpServlet {
                 break;
         }
 
-
-        break;
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
