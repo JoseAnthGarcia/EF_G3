@@ -2,6 +2,7 @@ package Servlets;
 
 import Beans.Cartelera;
 import Beans.Empleado;
+import Beans.Pelicula;
 import Daos.CarteleraDao;
 
 import javax.servlet.RequestDispatcher;
@@ -60,71 +61,9 @@ public class CarteleraServlet extends HttpServlet {
                 view.forward(request, response);
                 break;
             case "agregarNuevaFuncion":
-
+                request.setAttribute("listaPeliculas", carteleraDao.obtenerListaPeliculas());
+                request.setAttribute("listaCines", carteleraDao.obtenerListaCines());
                 view = request.getRequestDispatcher("nuevaFuncion.jsp");
-                view.forward(request, response);
-                break;
-
-            case "editar":
-                if (rol.equals("Top 1") || rol.equals("Top 3")) {
-                    if (request.getParameter("id") != null) {
-                        String employeeIdString = request.getParameter("id");
-                        int employeeId = 0;
-                        try {
-                            employeeId = Integer.parseInt(employeeIdString);
-                        } catch (NumberFormatException ex) {
-                            response.sendRedirect("EmployeeServlet");
-                        }
-
-                        Employee emp = employeeDao.obtenerEmpleado(employeeId);
-
-                        if (emp != null) {
-                            request.setAttribute("empleado", emp);
-                            JobHistoryDao jobHistoryDao = new JobHistoryDao();
-                            ArrayList<JobHistory> listaJobHistory=jobHistoryDao.listarJobHistories(employeeId);
-                            request.setAttribute("listaJobHistory",listaJobHistory);
-                            view = request.getRequestDispatcher("employees/formularioEditar.jsp");
-                            view.forward(request, response);
-                        } else {
-                            response.sendRedirect("EmployeeServlet");
-                        }
-
-                    } else {
-                        response.sendRedirect("EmployeeServlet");
-                    }
-                } else {
-                    response.sendRedirect(request.getContextPath() + "/EmployeeServlet");
-                }
-
-                break;
-            case "borrar":
-                if (rol.equals("Top 1") || rol.equals("Top 2")) {
-                    if (request.getParameter("id") != null) {
-                        String employeeIdString = request.getParameter("id");
-                        int employeeId = 0;
-                        try {
-                            employeeId = Integer.parseInt(employeeIdString);
-                        } catch (NumberFormatException ex) {
-                            response.sendRedirect("EmployeeServlet");
-                        }
-
-                        Employee emp = employeeDao.obtenerEmpleado(employeeId);
-
-                        if (emp != null) {
-                            employeeDao.borrarEmpleado(employeeId);
-                        }
-                    }
-
-                    response.sendRedirect("EmployeeServlet");
-                } else {
-                    response.sendRedirect(request.getContextPath() + "/EmployeeServlet");
-                }
-
-                break;
-            case "est":
-                request.setAttribute("listaEmpRegion", employeeDao.listaEmpleadosPorRegion());
-                request.setAttribute("listaSalario", employeeDao.listaSalarioPorDepartamento());
-                view = request.getRequestDispatcher("employees/estadisticas.jsp");
                 view.forward(request, response);
                 break;
         }

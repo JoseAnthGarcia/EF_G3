@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CarteleraDao extends BaseDao{
-    public ArrayList<Cartelera> listaCarteleras(idCine){
+    public ArrayList<Cartelera> listaCarteleras(int idCine){
         ArrayList<Cartelera> lista = new ArrayList<>();
         String sql = "select car.idCartelera,p.idpelicula,p.nombre,ci.idcine, ci.nombre,cad.nombre_comercial, car.`3d`, car.doblada, car.subtitulada, car.horario\n" +
                 "from cine ci\n" +
@@ -74,6 +74,7 @@ public class CarteleraDao extends BaseDao{
                 Pelicula pelicula = new Pelicula();
                 pelicula.setIdPelicula(rs.getInt(1));
                 pelicula.setNombre(rs.getString(2));
+                listaPeliculas.add(pelicula)
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -82,8 +83,26 @@ public class CarteleraDao extends BaseDao{
         return listaPeliculas;
     }
 
-    public ArrayList<Pelicula> obtenerListaCines() {
-        ArrayList<Pelicula> listaCines = new ArrayList<>();
+    public ArrayList<Cine> obtenerListaCines() {
+        ArrayList<Cine> listaCines = new ArrayList<>();
+
+        String sql = "select * from cine;";
+        try (Connection conn = this.getConection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql);) {
+
+            while (rs.next()) {
+                Cine cine = new Cine();
+                cine.setIdCine(rs.getInt(1));
+                cine.setNombre(rs.getString(2));
+                //TODO: obtener cadena????
+                listaCines.add(cine);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
         return listaCines;
     }
 }
