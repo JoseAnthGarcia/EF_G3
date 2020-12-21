@@ -26,10 +26,18 @@ public class CarteleraServlet extends HttpServlet {
 
         switch (action){
             case "agregarFuncion":
+
                 String idPelicula = request.getParameter("idPelicula");
                 String idCine = request.getParameter("idCine");
                 String tresD = request.getParameter("3d");
                 String doblada = request.getParameter("doblada");
+                String horario = request.getParameter("horario");
+
+                CarteleraDao carteleraDao = new CarteleraDao();
+                carteleraDao.guardarFuncion(Integer.parseInt(idPelicula), Integer.parseInt(idCine),
+                        Integer.parseInt(tresD), Integer.parseInt(doblada), horario);
+                response.sendRedirect(""); //TODO: agregar sendredirect
+
                 break;
         }
 
@@ -51,16 +59,10 @@ public class CarteleraServlet extends HttpServlet {
                 view = request.getRequestDispatcher("employees/lista.jsp");
                 view.forward(request, response);
                 break;
-            case "agregar":
-                if (rol.equals("Top 1") || rol.equals("Top 2")) {
-                    request.setAttribute("listaTrabajos", jobDao.listarTrabajos());
+            case "agregarNuevaFuncion":
 
-                    view = request.getRequestDispatcher("employees/formularioNuevo.jsp");
-                    view.forward(request, response);
-                } else {
-                    response.sendRedirect(request.getContextPath() + "/EmployeeServlet");
-                }
-
+                view = request.getRequestDispatcher("nuevaFuncion.jsp");
+                view.forward(request, response);
                 break;
 
             case "editar":
