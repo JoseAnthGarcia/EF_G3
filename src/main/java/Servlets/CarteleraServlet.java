@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-@WebServlet(name = "CarteleraServlet")
+@WebServlet(name = "CarteleraServlet", urlPatterns = {"/CarteleraServlet"})
 public class CarteleraServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") == null ? "lista" : request.getParameter("action");
@@ -22,69 +22,16 @@ public class CarteleraServlet extends HttpServlet {
         RequestDispatcher view;
         Cartelera cartelera = new Cartelera();
         String rol = (String) request.getSession().getAttribute("rol");
-        case "guardar":
-        if (rol.equals("Top 1") || rol.equals("Top 2")) {
-            Employee e = new Employee();
-            e.setFirstName(request.getParameter("first_name"));
-            e.setLastName(request.getParameter("last_name"));
-            e.setEmail(request.getParameter("email"));
-            e.setPhoneNumber(request.getParameter("phone"));
-            e.setHireDate(request.getParameter("hire_date"));
-            Job job = new Job();
-            job.setJobId(request.getParameter("job_id"));
-            e.setJob(job);
-            e.setSalary(new BigDecimal(request.getParameter("salary")));
-            e.setCommissionPct(request.getParameter("commission").equals("") ? null : new BigDecimal(request.getParameter("commission")));
-            Employee manager = new Employee();
-            manager.setEmployeeId(Integer.parseInt(request.getParameter("manager_id")));
-            e.setManager(manager);
 
-            Department department = new Department();
-            department.setDepartmentId(Integer.parseInt(request.getParameter("department_id")));
-            e.setDepartment(department);
 
-            employeeDao.guardarEmpleado(e);
-
-            response.sendRedirect("EmployeeServlet");
-        } else {
-            response.sendRedirect(request.getContextPath() + "/EmployeeServlet");
+        switch (action){
+            case "agregarFuncion":
+                String idPelicula = request.getParameter("idPelicula");
+                String idCine = request.getParameter("idCine");
+                String tresD = request.getParameter("3d");
+                String doblada = request.getParameter("doblada");
+                break;
         }
-
-        break;
-        case "actualizar":
-        Employee empl = new Employee();
-        empl.setEmployeeId(Integer.parseInt(request.getParameter("employee_id"))); //no olvidar que para actualizar se debe enviar el ID
-        empl.setFirstName(request.getParameter("first_name"));
-        empl.setLastName(request.getParameter("last_name"));
-        empl.setEmail(request.getParameter("email"));
-        empl.setPhoneNumber(request.getParameter("phone"));
-        empl.setHireDate(request.getParameter("hire_date"));
-        Job j = new Job();
-        j.setJobId(request.getParameter("job_id"));
-        empl.setJob(j);
-        empl.setSalary(new BigDecimal(request.getParameter("salary")));
-        empl.setCommissionPct(request.getParameter("commission").equals("") ? null : new BigDecimal(request.getParameter("commission")));
-        Employee m = new Employee();
-        m.setEmployeeId(Integer.parseInt(request.getParameter("manager_id")));
-        empl.setManager(m);
-
-        Department d = new Department();
-        d.setDepartmentId(Integer.parseInt(request.getParameter("department_id")));
-        empl.setDepartment(d);
-
-        Employee employeeAntiguo = employeeDao.obtenerEmpleado(empl.getEmployeeId());
-
-        employeeDao.actualizarEmpleado(empl);
-
-        if (!employeeAntiguo.getJob().getJobId().equals(empl.getJob().getJobId())) {
-            JobHistoryDao jobHistoryDao = new JobHistoryDao();
-            JobHistory jobHistory = jobHistoryDao.obtenerUltimoJobHistory(empl.getEmployeeId());
-
-            jobHistoryDao.CrearJobHistory(empl.getEmployeeId(), jobHistory == null ? employeeAntiguo.getHireDate() : jobHistory.getEndDate(), employeeAntiguo.getJob().getJobId(), employeeAntiguo.getDepartment().getDepartmentId());
-
-        }
-
-        response.sendRedirect("EmployeeServlet?action=lista");
 
 
         break;

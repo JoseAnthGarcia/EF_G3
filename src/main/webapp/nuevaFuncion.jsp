@@ -18,10 +18,6 @@
             <h1 class='mb-3'>Nueva funcion</h1>
             <hr>
             <form method="POST" action="<%=request.getContextPath()%>/CarteleraServlet?action=agregarFuncion">
-                <div class="form-group">
-                    <label for="first_name">First Name</label>
-                    <input type="text" class="form-control form-control-sm" id="first_name" name="first_name">
-                </div>
 
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Selecciona pelicula</label>
@@ -49,7 +45,7 @@
 
                 <div class="form-group">
                     <label for="doblada">¿doblada o subtitulada?</label>
-                    <input type="text" class="form-control form-control-sm" id="doblada" name="3d">
+                    <input type="text" class="form-control form-control-sm" id="doblada" name="doblada">
                     <small id="Help2" class="form-text text-muted">Ingrese 1 si es doblada y 0 si es subtitulada</small>
                 </div>
 
