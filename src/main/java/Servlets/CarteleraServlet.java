@@ -2,6 +2,7 @@ package Servlets;
 
 import Beans.Cartelera;
 import Beans.Empleado;
+import Daos.CarteleraDao;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -93,15 +94,13 @@ public class CarteleraServlet extends HttpServlet {
         String action = request.getParameter("action") == null ? "lista" : request.getParameter("action");
 
         RequestDispatcher view;
-        Employee employee;
-        EmployeeDao employeeDao = new EmployeeDao();
-        JobDao jobDao = new JobDao();
-
         String rol = (String) request.getSession().getAttribute("rol");
+
+        CarteleraDao carteleraDao = new CarteleraDao();
 
         switch (action) {
             case "lista":
-                request.setAttribute("listaEmpleados", employeeDao.listarEmpleados());
+                request.setAttribute("listaCartelera", carteleraDao.listaCarteleras());
                 view = request.getRequestDispatcher("employees/lista.jsp");
                 view.forward(request, response);
                 break;

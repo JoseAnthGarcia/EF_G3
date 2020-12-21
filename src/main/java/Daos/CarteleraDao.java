@@ -1,36 +1,48 @@
 package Daos;
 
-import Beans.Cartelera;
+import Beans.*;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
-public class CarteleraDao {
+public class CarteleraDao extends BaseDao{
     public ArrayList<Cartelera> listaCarteleras(idCine){
         ArrayList<Cartelera> lista = new ArrayList<>();
-        String sql = "select department_name,max(e.salary) as 'maxSalary', min(e.salary) as'minSalary',\n" +
-                "((max(e.salary)+min(e.salary))/2) as 'promedio'\n" +
-                "from employees e\n" +
-                "inner join departments d on e.department_id = d.department_id\n" +
-                "group by e.department_id;";
-        try(Connection connection = getConection();
-            Statement statement = connection.createStatement();
-            ResultSet rs= statement.executeQuery(sql);) {
-            while (rs.next()){
-                SalarioPorDepartamentoDto salarioPorDepartamentoDto = new SalarioPorDepartamentoDto();
-                salarioPorDepartamentoDto.setNombreDepartamento(rs.getString(1));
-                salarioPorDepartamentoDto.setSalarioMaximo(rs.getBigDecimal(2));
-                salarioPorDepartamentoDto.setSalarioMinimo(rs.getBigDecimal(3));
-                salarioPorDepartamentoDto.setSalarioPromedio(rs.getBigDecimal(4));
-                lista.add(salarioPorDepartamentoDto);
+        String sql = "select car.idCartelera,p.idpelicula,p.nombre,ci.idcine, ci.nombre,cad.nombre_comercial, car.`3d`, car.doblada, car.subtitulada, car.horario\n" +
+                "from cine ci\n" +
+                "inner join cadena cad on ci.idcadena=cad.idcadena\n" +
+                "inner join cartelera car on car.idcine= ci.idcine\n" +
+                "inner join pelicula p on p.idpelicula= car.idpelicula\n" +
+                "where ci.idcine=?;";
+        try (Connection conn = getConection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setString(1, idCine);
 
+
+            try (ResultSet rs = pstmt.executeQuery();) {
+                if (rs.next()) {
+                    Cartelera cartelera = new Cartelera();
+                    cartelera.setIdCartelera(rs.getInt(1));
+                    Pelicula pelicula = new Pelicula();
+                    pelicula.setIdPelicula(rs.getInt(2));
+                    pelicula.setNombre(rs.getString(3));
+                    cartelera.setPelicula(pelicula);
+                    Cine cine = new Cine();
+                    cine.setIdCine(rs.getInt(4));
+                    cine.setNombre(rs.getString(5));
+                    Cadena cadena = new Cadena();
+                    cadena.setNombreComercial(rs.getString(6));
+                    cine.setCadena(cadena);
+                    cartelera.setTresD(rs.getInt(7));
+                    cartelera.setDoblada(rs.getInt(8));
+                    cartelera.setSubtitulada(rs.getInt(9));
+                    cartelera.setHorario(rs.getString(10));
+                    lista.add(cartelera)
+                }
             }
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
         return lista;
     }
