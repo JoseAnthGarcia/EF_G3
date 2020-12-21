@@ -51,10 +51,10 @@ public class CarteleraServlet extends HttpServlet {
         RequestDispatcher view;
 
         CarteleraDao carteleraDao = new CarteleraDao();
-
+        Empleado empleado = (Empleado) request.getSession().getAttribute("empleadoSession");
         switch (action) {
             case "lista":
-                request.setAttribute("listaCartelera", carteleraDao.listaCarteleras());
+                request.setAttribute("listaCartelera", carteleraDao.listaCarteleras(empleado.getCine().getIdCine()));
                 view = request.getRequestDispatcher("listaCartelera.jsp");
                 view.forward(request, response);
                 break;

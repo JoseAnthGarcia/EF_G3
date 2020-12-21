@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CarteleraDao extends BaseDao{
-    public ArrayList<Cartelera> listaCarteleras(idCine){
+    public ArrayList<Cartelera> listaCarteleras(int idCine){
         ArrayList<Cartelera> lista = new ArrayList<>();
         String sql = "select car.idCartelera,p.idpelicula,p.nombre,ci.idcine, ci.nombre,cad.nombre_comercial, car.`3d`, car.doblada, car.subtitulada, car.horario\n" +
                 "from cine ci\n" +
