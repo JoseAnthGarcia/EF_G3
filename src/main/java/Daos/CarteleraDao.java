@@ -46,4 +46,44 @@ public class CarteleraDao extends BaseDao{
         }
         return lista;
     }
+
+    public  void guardarFuncion(int idPelicula, int idCine, int tresD, int doblada, String horario){
+
+        String sql = "";
+
+        try (Connection conn = getConection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public ArrayList<Pelicula> obtenerListaPeliculas() {
+        ArrayList<Pelicula> listaPeliculas = new ArrayList<>();
+
+        String sql = "select * from pelicula;";
+        try (Connection conn = this.getConection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql);) {
+
+            while (rs.next()) {
+                Pelicula pelicula = new Pelicula();
+                pelicula.setIdPelicula(rs.getInt(1));
+                pelicula.setNombre(rs.getString(2));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return listaPeliculas;
+    }
+
+    public ArrayList<Pelicula> obtenerListaCines() {
+        ArrayList<Pelicula> listaCines = new ArrayList<>();
+        return listaCines;
+    }
 }
